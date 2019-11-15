@@ -19,7 +19,7 @@ public class Collector {
 			while (username != "quit") {
 				System.out.println("Please enter a username to view their repos");
 				username = scanner.nextLine();
-				for (Repository repo : service.getRepositories("defunkt"))
+				for (Repository repo : service.getRepositories(username))
 					System.out.println(repo.getName() + " Watchers: " + repo.getWatchers());
 
 			}
