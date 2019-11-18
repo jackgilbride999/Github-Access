@@ -6,7 +6,7 @@
 The project was written in Java within the Eclipse IDE. The gitignore for the project is an Eclipse gitignore to simplify the file structure and stop the project from being IDE dependent. As a result the project only contains the relevant source code and executable.
 
 ### Libraries used
-The project uses [The GitHub Java API (org.eclipse.egit.github.core)](https://github.com/eclipse/egit-github/tree/master/org.eclipse.egit.github.core) which is part of the [Github Mylyn Connector](https://github.com/eclipse/egit-github) and aims to support the entire Github v3 API. This library uses the [Google GSON library](https://github.com/google/gson) to serialize and deserialize its information, so Google GSON library is also a dependency. Both files are in the 'lib' folder and referenced by the project.
+The project uses the [GitHub Java API (org.eclipse.egit.github.core)](https://github.com/eclipse/egit-github/tree/master/org.eclipse.egit.github.core) which is part of the [Github Mylyn Connector](https://github.com/eclipse/egit-github) and aims to support the entire Github v3 API. This library uses the [Google GSON library](https://github.com/google/gson) to serialize and deserialize its information, so Google GSON library is also a dependency. Both files are in the 'lib' folder and referenced by the project.
 
 ### Code and Approach
 For this stage of the project it was neccessary just to retrieve and display data regarding the logged in developer. The program interacts with the user through System.in and System.out. It asks the user for their username and password. These credentials only exist for the lifetime of the program and are not stored. The user may then enter the name of the user whose repository information they would like to see. For example, a snippet of the output for my name would be as follows:
@@ -33,5 +33,5 @@ Repository name: Yelp-Visualization-Project
 (...)
 ```
 
-### Usage
-For ease of use the project, including dependencies, is compiled into an **executable JAR file**. The JAR file is compiled for Java 8 or later. To execute the program, navigate to '/Workspace', then enter 'java -j Github-Access.jar' on the command line. The program should then run, connected to standard input and standard output. Once you have entered your credentials, you may enter 'quit' to exit the program.
+## Usage
+For ease of use the project, including dependencies, is compiled into an *executable JAR file*. The JAR file is compiled for Java 8 or later, so you must have that installed on your machine. To execute the program, navigate to `/Workspace`, then enter `java -j Github-Access.jar` on the command line. The program should then run, connected to standard input and standard output. Once you have entered your credentials, you may enter `quit` to exit the program.
