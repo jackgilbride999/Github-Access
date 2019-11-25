@@ -21,6 +21,7 @@ public class Collector {
 			client.setCredentials(username, password);
 			RepositoryService repoService = new RepositoryService(client);
 			UserService userService = new UserService(client);
+			CommitService commitService = new CommitService(client);
 			List<User> users = userService.getFollowing();
 			for (User user : users) {
 				System.out.println(user.getLogin());
@@ -37,7 +38,6 @@ public class Collector {
 					System.out.println("		- Created at: " + repo.getCreatedAt());
 					System.out.println("		- Updated at: " + repo.getUpdatedAt());
 					System.out.println("		- URL: " + repo.getGitUrl());
-					System.out.println("		- Commit comments: ");
 				}
 			}
 		} catch (Exception e) {
