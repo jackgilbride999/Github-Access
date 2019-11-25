@@ -5,6 +5,8 @@ import org.eclipse.egit.github.core.*;
 import org.eclipse.egit.github.core.client.*;
 import org.eclipse.egit.github.core.service.*;
 
+import com.github.gwtd3.api.D3;
+
 public class Collector {
 
 	public static void main(String[] args) {
@@ -17,14 +19,14 @@ public class Collector {
 			System.out.println("Welcome, " + username + "! Please enter your Github password");
 			String password = scanner.nextLine();
 			client.setCredentials(username, password);
-			RepositoryService repoService = new RepositoryService();
+			RepositoryService repoService = new RepositoryService(client);
 			UserService userService = new UserService(client);
 			List<User> users = userService.getFollowing();
 			for (User user : users) {
 				System.out.println(user.getLogin());
 				System.out.println("	Follower count:" + user.getFollowers());
 				System.out.println("	Following count:" + user.getFollowers());
-				List<Repository> repos = repoService.getRepositories(user.getLogin();
+				List<Repository> repos = repoService.getRepositories(user.getLogin());
 				for (Repository repo : repos) {
 					System.out.println("	Repository name: " + repo.getName());
 					System.out.println("		- Language: " + repo.getLanguage());
