@@ -8,6 +8,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.egit.github.core-2.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.8.6.jar"/>
-	<classpathentry kind="lib" path="lib/sdk-sandbox-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/mongo-java-driver-3.11.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/mongo-java-driver-3.11.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
