@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.bson.Document;
 import org.eclipse.egit.github.core.*;
 import org.eclipse.egit.github.core.client.*;
 import org.eclipse.egit.github.core.service.*;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class Collector {
@@ -73,15 +75,56 @@ public class Collector {
 		scanner.close();
 		return this;
 	}
-
-	public static void main(String[] args) {
-		Collector collector = new Collector();
-		collector.queryGithub();
+	
+	/*
+	 * Populate the MongoDB database.
+	 */
+	private void populate() {
+		List<Document> userDocuments = new ArrayList<Document>();
+		// Connect to the Mongo database
 		MongoClientURI uri = new MongoClientURI(
 			    "mongodb+srv://jackgilbride999:73hog24Ghhdq6BWg@github-ueksk.mongodb.net/test?retryWrites=true&w=majority");
 			
 		MongoClient mongoClient = new MongoClient(uri);
-		MongoDatabase database = mongoClient.getDatabase("test");
+		MongoDatabase database = mongoClient.getDatabase("Github");
 		System.out.println(database.toString());
+		
+		// Populate the document using data from the collector
+		MongoCollection<Document> collection = database.getCollection("repos");
+		for(User user : this.userList) {
+			Document userDocument = new Document("login", user.getLogin());
+			List<Repository> repos = this.userRepositories.get(user);
+			if(repos != null) {
+				for(Repository repo : repos) {
+					userDocument.append("repository", getRepoDocument(repo));
+				}
+			}
+			userDocuments.add(userDocument);
+		}
+		collection.insertMany(userDocuments);
+		mongoClient.close();
+	}
+	
+	/*
+	 * Return a new document representing a repository, containing its name, language,
+	 * description, size, watchers, forks, creation date, update data and git URL.
+	 */
+	private Document getRepoDocument(Repository repo) {
+		return new Document("name", repo.getName())
+				.append("language", repo.getLanguage())
+				.append("description", repo.getDescription())
+				.append("size", repo.getSize())
+				.append("watchers", repo.getWatchers())
+				.append("forks", repo.getForks())
+				.append("created", repo.getCreatedAt())
+				.append("updated",repo.getUpdatedAt())
+				.append("url", repo.getGitUrl())			
+				;	
+	}
+
+	public static void main(String[] args) {
+		Collector collector = new Collector();
+		collector.queryGithub();
+		collector.populate();
 	}
 }
