@@ -22,52 +22,48 @@ public class Collector {
 		userRepositories = new HashMap<User, List<Repository>>();
 	}
 	
+	/*
+	 * 	Add a user to the user list.
+	 */
 	private void addUser(User user) {
 		userList.add(user);
 	}
 	
+	/*
+	 * Add a user and a repository to the map from users to their repositories.
+	 */
 	private void addRepository(User user, Repository repo) {
-		if(userRepositories.containsKey(user)) {
-			(userRepositories.get(user)).add(repo);
-		} else {
+		if(!userRepositories.containsKey(user)) {
+			// if the user is not in the map yet, add them with a new empty list
 			userRepositories.put(user, new ArrayList<Repository>());
-		}
-	}
 
-	public static void main(String[] args) {
+		}
+		userRepositories.get(user).add(repo);
+	}
+	
+	/*
+	 * Query the Github API and return a Collector with the relevant data.
+	 */
+	Collector queryGithub() {
 		Scanner scanner = new Scanner(System.in);
-		MongoClientURI uri = new MongoClientURI(
-			    "mongodb+srv://jackgilbride999:73hog24Ghhdq6BWg@github-ueksk.mongodb.net/test?retryWrites=true&w=majority");
-			
-		MongoClient mongoClient = new MongoClient(uri);
-		MongoDatabase database = mongoClient.getDatabase("test");
-		System.out.println(database.toString());
 		try {
-			GitHubClient client = new GitHubClient();
-			System.out.println("Welcome to Github Access. This program interrogates the Github API for data about those you are following.");
+			// Collect login credentials and authenticate
 			System.out.println("Please enter your Github username");
 			String username = scanner.nextLine();
 			System.out.println("Welcome, " + username + "! Please enter your Github password");
 			String password = scanner.nextLine();
+			GitHubClient client = new GitHubClient();
 			client.setCredentials(username, password);
-			RepositoryService repoService = new RepositoryService(client);
+			// Initialise Github API services
 			UserService userService = new UserService(client);
+			RepositoryService repoService = new RepositoryService(client);
+			// Collect the users and repositories
 			List<User> users = userService.getFollowing();
 			for (User user : users) {
-				System.out.println(user.getLogin());
-				System.out.println("	Follower count:" + user.getFollowers());
-				System.out.println("	Following count:" + user.getFollowers());
+				this.addUser(user);
 				List<Repository> repos = repoService.getRepositories(user.getLogin());
 				for (Repository repo : repos) {
-					System.out.println("	Repository name: " + repo.getName());
-					System.out.println("		- Language: " + repo.getLanguage());
-					System.out.println("		- Description: " + repo.getDescription());
-					System.out.println("		- Size: " + repo.getSize() + " kB");
-					System.out.println("		- Number of watchers: " + repo.getWatchers());
-					System.out.println("		- Number of forks: " + repo.getForks());
-					System.out.println("		- Created at: " + repo.getCreatedAt());
-					System.out.println("		- Updated at: " + repo.getUpdatedAt());
-					System.out.println("		- URL: " + repo.getGitUrl());
+					this.addRepository(user, repo);
 				}
 			}
 		} catch (Exception e) {
@@ -75,5 +71,17 @@ public class Collector {
 			e.printStackTrace();
 		}
 		scanner.close();
+		return this;
+	}
+
+	public static void main(String[] args) {
+		Collector collector = new Collector();
+		collector.queryGithub();
+		MongoClientURI uri = new MongoClientURI(
+			    "mongodb+srv://jackgilbride999:73hog24Ghhdq6BWg@github-ueksk.mongodb.net/test?retryWrites=true&w=majority");
+			
+		MongoClient mongoClient = new MongoClient(uri);
+		MongoDatabase database = mongoClient.getDatabase("test");
+		System.out.println(database.toString());
 	}
 }
