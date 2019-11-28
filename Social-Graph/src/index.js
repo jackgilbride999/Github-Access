@@ -35,8 +35,7 @@ client.connect(function(err) {
       console.log("Found the following records");
       console.log(docs)
       callback(docs);
-//      var mydoc = docs[1];
-//      console.log(mydoc);  
+
     });
 
   }
