@@ -61,10 +61,12 @@ public class Collector {
 			RepositoryService repoService = new RepositoryService(client);
 			// Collect the users and repositories
 			List<User> users = userService.getFollowing();
+			users.add(userService.getUser()); 
 			for (User user : users) {
 				this.addUser(user);
 				List<Repository> repos = repoService.getRepositories(user.getLogin());
 				for (Repository repo : repos) {
+					System.out.println("" + repo.getName());
 					this.addRepository(user, repo);
 				}
 			}
@@ -80,6 +82,11 @@ public class Collector {
 	 * Populate the MongoDB database.
 	 */
 	private void populate() {
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+
 		List<Document> userDocuments = new ArrayList<Document>();
 		// Connect to the Mongo database
 		MongoClientURI uri = new MongoClientURI(
@@ -95,9 +102,12 @@ public class Collector {
 			Document userDocument = new Document("login", user.getLogin());
 			List<Repository> repos = this.userRepositories.get(user);
 			if(repos != null) {
+				List<Document> repoDocs = new ArrayList<Document>();
 				for(Repository repo : repos) {
-					userDocument.append("repository", getRepoDocument(repo));
+					System.out.println("" + repo.getName());
+					repoDocs.add(getRepoDocument(repo));
 				}
+				userDocument.append("repositories", repoDocs);
 			}
 			userDocuments.add(userDocument);
 		}
