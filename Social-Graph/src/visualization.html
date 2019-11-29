@@ -1845,8 +1845,8 @@
             {
                 "_id": "5de029e8d7dce50678bd1b3c",
                 "login": "Nicholas-Lawlor",
-                "followers": 38,
-                "following": 24,
+                "followers": 2,
+                "following": 2,
                 "repositories": []
             },
             {
@@ -3400,7 +3400,7 @@
 
         console.log(data);
         var xValue = function (d) { return d.followers * 5 };
-        var yValue = function (d) { return height - margin.bottom - d.following * 5 };
+        var yValue = function (d) { return height - d.following * 5 };
         function perc2color(perc) {
             var r, g, b = 0;
             if (perc < 50) {
@@ -3414,6 +3414,16 @@
             var h = r * 0x10000 + g * 0x100 + b * 0x1;
             return '#' + ('000000' + h.toString(16)).slice(-6);
         }
+
+        // ctooltip on hover
+        var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("font-family", "arial")
+	        .style("font-size", "10px")
+            .text("a simple tooltip");
 
         var len = 0;
         for (let i = 0; i < data.length; i++) {
@@ -3429,23 +3439,62 @@
                 .attr("cy", yValue(data[i]))
                 .attr("r", 3)
                 .style("fill", perc2color(data[i].repositories.length * 4))
+                .on("mouseover", function () { tooltip.style("visibility", "visible"); tooltip.text(data[i].login) })
+
+                .on("mousemove", function () {
+                    return tooltip.style("top",
+                        (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
+                })
+                .on("mouseout", function () { tooltip.style("visibility", "hidden"); });
         }
 
 
         // Add X axis
         var x = d3.scaleLinear()
-            .domain([0, 40])
-            .range([0, 40*5]);
+            .domain([0, width / 5])
+            .range([0, width]);
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x));
 
+        // Label X axis
+        svg.append("text")
+            .attr("transform",
+                "translate(" + (width / 2) + " ," +
+                (height + margin.top + 20) + ")")
+            .style("text-anchor", "middle")
+            .text("Followers")
+            .attr("font-family", "arial")
+            .attr("font-size", "15px");
+
         // Add Y axis
         var y = d3.scaleLinear()
-            .domain([0, 40])
+            .domain([0, height / 5])
             .range([height, 0]);
         svg.append("g")
             .call(d3.axisLeft(y));
+
+        // Label Y axis
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left * (3 / 4))
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Followings")
+            .attr("font-family", "arial")
+            .attr("font-size", "15px");
+
+        // Title of graph
+        svg.append("text")
+            .attr("x", (width / 2))
+            .attr("y", margin.top)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .attr("font-family", "arial")
+            .text("Followers vs Followings Graph");
+
+        var legend = [height -10, height - 20, height - 30, height -40]
     </script>
 </body>
 
