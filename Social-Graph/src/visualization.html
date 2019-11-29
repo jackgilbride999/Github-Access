@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
-    <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>    
-    <script src="index.js"></script>    
+    <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>       
     <title>D3</title>
 </head>
 <body>
   <script>
 
-    var dataset = {
-      users: [
+    var data = [
       { 
         "_id" : "5de029e8d7dce50678bd1b28", 
         "login" : "ConorT99", 
@@ -3322,8 +3320,31 @@
         ]
     }
     ]
-    };
-    d3.select('body').append('svg').append('rect').attr('width', 50).attr('height', 200).style('fill','blue');  // set color
+
+    var svg = d3.select("body").append("svg")
+      .attrs({"width": 5000,
+      			  "height": 5000,
+              "bgcolor": "black"})
+
+
+    for(let i=0; i<data.length; i++){
+      for(let j = 0; j<data[i].repositories.length; j++){
+      console.log(data[i]._id);
+      var ball = svg.append("circle")
+        .attrs({  // provided by selection-multi module
+          "r": 10,
+          "cx": 50 + (data[i].repositories[j].watchers)*50,
+          "cy": 50 + (data[i].repositories[j].forks)*50
+          })
+        .style("fill", "#ffe41e");
+        var label = svg.append("text")
+          .attrs({
+            "x": 50 + (data[i].repositories[j].watchers)*50,
+            "y": 50 + data[i].repositories[j].forks*50,
+          }).text(data[i].login)
+
+      }
+    }
 
   </script>
 </body>
