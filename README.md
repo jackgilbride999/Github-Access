@@ -1,15 +1,14 @@
 # Github Accecss
 *"Interrogate the **GitHub API** to retrieve and display data regarding the logged in developer."*
 
-## Implementation
-### Development environment
-The project was written in Java within the Eclipse IDE. The gitignore for the project is an Eclipse gitignore to simplify the file structure and stop the project from being IDE dependent. As a result the project only contains the relevant source code and executable.
+**Note:** The first part of this project is at commit 2bb2424215902a5b17b448d0437a6ee807f5f20e.
 
-### Libraries used
-The project uses the [GitHub Java API (org.eclipse.egit.github.core)](https://github.com/eclipse/egit-github/tree/master/org.eclipse.egit.github.core) which is part of the [Github Mylyn Connector](https://github.com/eclipse/egit-github) and aims to support the entire Github v3 API. This library uses the [Google GSON library](https://github.com/google/gson) to serialize and deserialize its information, so Google GSON library is also a dependency. Both files are in the 'lib' folder and referenced by the project.
+## Stage 1 - Query Github
+### About
+The project was written in Java within the Eclipse IDE. It uses the [GitHub Java API (org.eclipse.egit.github.core)](https://github.com/eclipse/egit-github/tree/master/org.eclipse.egit.github.core) to query Github and find information about the signed in user and everyone they follow, including repositories. It then uses the [Java MongoDB driver](https://docs.mongodb.com/ecosystem/drivers/java/) to populate a MongoDB collection. I used this to populate my MongoDB collection with the accounts that I currently follow.
 
-### Code and Approach
-For this stage of the project it was neccessary just to retrieve and display data regarding the logged in developer. The program interacts with the user through System.in and System.out. It asks the user for their username and password. These credentials only exist for the lifetime of the program and are not stored. The user may then enter the name of the user whose repository information they would like to see. For example, a snippet of the output for my name would be as follows:
+### How to Use
+The source code at this stage of the project can be found in the **Query_Github** folder. The code is not runnable, as it has an outdated password to avoid unwanted writes to the database. However a `.jar` file is provided from an older version of the project, which simply queries data about the logged in user and prints it to the console. To execute it, ensure that you have Java 8 or later installed on your machine, then enter then enter `java -j Github-Access.jar`. You may enter as many names as you want, or `quit` to exit. Example output when querying my account would include the following:
 ```
 (...)
 Repository name: VHDL-Processor
@@ -32,6 +31,41 @@ Repository name: Yelp-Visualization-Project
         - URL: git://github.com/jackgilbride999/Yelp-Visualization-Project.git
 (...)
 ```
+## Stage 2 - Query MongoDB
+### About
+The code to query MongoDB was written in Node.js using the [Node.js MongoDB driver](https://docs.mongodb.com/ecosystem/drivers/node/). It queries the data from the database and outputs it as a JSON.
 
-## Usage
-For ease of use the project, including dependencies, is compiled into an *executable JAR file*. The JAR file is compiled for Java 8 or later, so you must have that installed on your machine. To execute the program, navigate to `/Workspace`, then enter `java -j Github-Access.jar` on the command line. The program should then run, connected to standard input and standard output. Once you have entered your credentials, you may enter `quit` to exit the program.
+### How to Use
+This section of the project is runnable as it uses a read-only API key. To run, navigate to the **Query_Mongo** folder. Ensure that you have Node JS on your machine and enter `npm start` into the console. Sample output from this stage of the project would include the following:
+```
+(...)
+  {
+    _id: 5de19cb8714b675b72b00e33,
+    login: 'jackgilbride999',
+    followers: 22,
+    following: 28,
+    repositories: [
+      [Object], [Object], [Object],
+      [Object], [Object], [Object],
+      [Object], [Object], [Object],
+      [Object], [Object], [Object],
+      [Object], [Object], [Object],
+      [Object], [Object], [Object],
+      [Object], [Object]
+    ]
+  }
+(...)
+```
+
+## Stage 3 - Visualize the Data
+### About
+The visualization of data was written using the [D3 data visualization library for Javascript](https://github.com/d3/d3). I created two visualizations:
+- Number of followers vs number of followings, and their correlation to number of repositories
+- Breakdown a user's repository list by language
+
+### How to Use
+For ease of use, both visualizations are fully encapsulated into their own HTML file. Navigate to the **Visualizations** folder and open them in a web browser. The files appear as follows:
+- *Followers vs following* (mouse over a user to see their username). Interestingly, this shows a strong combination between number of followers, number of followings and number of repositories. It could be argued that a person's position on the graph determines their engagement with Github, at least publicly:
+![Followers vs following](followers_vs_following.PNG)
+- *Language breakdown* (press the button on the top left to cycle through users):
+![Language breakdown](language_breakdown.PNG)
