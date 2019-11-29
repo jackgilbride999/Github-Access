@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Collector {
 	
 	List<User> userList;
 	Map<User, List<Repository>> userRepositories;
+	private UserService userService;
 	
 	Collector(){
 		userList = new ArrayList<User>();
@@ -57,7 +59,7 @@ public class Collector {
 			GitHubClient client = new GitHubClient();
 			client.setCredentials(username, password);
 			// Initialise Github API services
-			UserService userService = new UserService(client);
+			this.userService = new UserService(client);
 			RepositoryService repoService = new RepositoryService(client);
 			// Collect the users and repositories
 			List<User> users = userService.getFollowing();
@@ -86,7 +88,6 @@ public class Collector {
 		System.out.println();
 		System.out.println();
 		System.out.println();
-
 		List<Document> userDocuments = new ArrayList<Document>();
 		// Connect to the Mongo database
 		MongoClientURI uri = new MongoClientURI(
@@ -100,6 +101,12 @@ public class Collector {
 		MongoCollection<Document> collection = database.getCollection("repos");
 		for(User user : this.userList) {
 			Document userDocument = new Document("login", user.getLogin());
+			try {
+				userDocument.append("followers", this.userService.getFollowers(user.getLogin()).size());
+				userDocument.append("following", this.userService.getFollowing(user.getLogin()).size());			
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			List<Repository> repos = this.userRepositories.get(user);
 			if(repos != null) {
 				List<Document> repoDocs = new ArrayList<Document>();
