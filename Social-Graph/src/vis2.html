@@ -15,9 +15,8 @@
     <!-- Color scale -->
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-    <!-- Add 2 buttons -->
-    <button onclick="update(data1)">Data 1</button>
-    <button onclick="update(data2)">Data 2</button>
+    <!-- Add buttons -->
+    <button onclick="update(data1)">Change username</button>
 
     <!-- Create a div where the graph will take place -->
     <div id="my_dataviz"></div>
@@ -3414,90 +3413,189 @@
             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 
-        // populate data1
-        var repositories = findRepositories();
+        var userIndex = 0;
+        var userName = data[0].login;
 
         function findRepositories() {
-            for (let i = 0; i < data.length; i++) {
+            userIndex++;
+            if (userIndex > data.length) {
+                userIndex = 0;
+            }
+            userName = data[userIndex].login;
+            return data[userIndex].repositories;
+
+            /*for (let i = 0; i < data.length; i++) {
                 if (data[i].login == "jackgilbride999") {
                     return data[i].repositories;
                 }
-            }
+            }*/
         }
 
-        console.log(repositories);
+        //     console.log(repositories);
+        let lang3 = { a: "", b: "", c: "", d: "", e: "", f: "", g: "", h: "", i: "", j: "", k: "", l: "", m: "" }
 
-        var data3 = { a: 0, b: 0, c: 0, d: 0, e: 0, f: "" }
-        var lang3 = { a: "", b: "", c: "", d: "", e: "", f: "" }
-        for (let i = 0; i < repositories.length; i++) {
-            var found = false;
-            var language = repositories[i].language;
-            console.log(language);
-            switch (true) {
-                case lang3.a == language:
-                    data3.a++;
-                    break;
-                case lang3.b == language:
-                    data3.b++;
-                    break;
-                case lang3.c == language:
-                    data3.c++;
-                    break;
-                case lang3.d == language:
-                    data3.d++;
-                    break;
-                case lang3.e == language:
-                    data3.e++;
-                    break;
-                case lang3.f == language:
-                    data3.f++;
-                    break;
-                case lang3.a == "":
-                    lang3.a = language;
-                    data3.a++;
-                    break;
-                case lang3.b == "":
-                    lang3.b = language;
-                    data3.b++;
-                    break;
-                case lang3.c == "":
-                    lang3.c = language;
-                    data3.c++;
-                    break;
-                case lang3.d == "":
-                    lang3.d = language;
-                    data3.d++;
-                    break;
-                case lang3.e == "":
-                    lang3.e = language;
-                    data3.e++;
-                    break;
-                case lang3.f == "":
-                    lang3.f = language;
-                    data3.f++;
-                    break;
-                default:
-                    break;
+
+        function setData(repositories) {
+            let data3 = { a: 0, b: 0, c: 0, d: 0, e: 0, f: 0, g: 0, h: 0, i: 0, j: 0, k: 0, l: 0, m: 0 }
+            lang3 = { a: "", b: "", c: "", d: "", e: "", f: "", g: "", h: "", i: "", j: "", k: "", l: "", m: "" }
+
+            for (let i = 0; i < repositories.length; i++) {
+                let found = false;
+                let language = repositories[i].language;
+                console.log(language);
+                switch (true) {
+                    case lang3.a == language:
+                        data3.a++;
+                        break;
+                    case lang3.b == language:
+                        data3.b++;
+                        break;
+                    case lang3.c == language:
+                        data3.c++;
+                        break;
+                    case lang3.d == language:
+                        data3.d++;
+                        break;
+                    case lang3.e == language:
+                        data3.e++;
+                        break;
+                    case lang3.f == language:
+                        data3.f++;
+                        break;
+                    case lang3.g == language:
+                        data3.g++;
+                        break;
+                    case lang3.h == language:
+                        data3.h++;
+                        break;
+                    case lang3.i == language:
+                        data3.i++;
+                        break;
+                    case lang3.j == language:
+                        data3.j++;
+                        break;
+                    case lang3.k == language:
+                        data3.k++;
+                        break;
+                    case lang3.l == language:
+                        data3.l++;
+                        break;
+                    case lang3.m == language:
+                        data3.m++;
+                        break;
+                    case lang3.a == "":
+                        lang3.a = language;
+                        data3.a++;
+                        break;
+                    case lang3.b == "":
+                        lang3.b = language;
+                        data3.b++;
+                        break;
+                    case lang3.c == "":
+                        lang3.c = language;
+                        data3.c++;
+                        break;
+                    case lang3.d == "":
+                        lang3.d = language;
+                        data3.d++;
+                        break;
+                    case lang3.e == "":
+                        lang3.e = language;
+                        data3.e++;
+                        break;
+                    case lang3.f == "":
+                        lang3.f = language;
+                        data3.f++;
+                        break;
+                    case lang3.g == "":
+                        lang3.g = language;
+                        data3.g++;
+                        break;
+                    case lang3.h == "":
+                        lang3.h = language;
+                        data3.h++;
+                        break;
+                    case lang3.i == "":
+                        lang3.i = language;
+                        data3.i++;
+                        break;
+                    case lang3.j == "":
+                        lang3.j = language;
+                        data3.j++;
+                        break;
+                    case lang3.k == "":
+                        lang3.k = language;
+                        data3.k++;
+                        break;
+                    case lang3.l == "":
+                        lang3.l = language;
+                        data3.l++;
+                        break;
+                    case lang3.m == "":
+                        lang3.m = language;
+                        data3.m++;
+                        break;
+                    default:
+                        break;
+                }
             }
+            console.log(data3);
+            console.log(lang3);
+            return data3;
         }
-        console.log(data3);
-        console.log(lang3);
 
+        function drawName() {
+            // Rectangle for the key
+            svg.append("rect")
+                .attr("x", -500)
+                .attr("y", 185)
+                .attr("height", 1000)
+                .attr("width", 1000)
+                .attr("fill", "white")
+                .style("stroke-width", 1);
+            // Title of graph
+            svg.append("text")
+                .attr("x", -30)
+                .attr("y", 200)
+                .attr("alignment-baseline", "central")
+                .style("font-size", "16px")
+                .attr("font-family", "arial")
+                .text(userName);
+        }
 
+        function drawKey(){
+            svg.append("rect")
+                .attr("x", 200)
+                .attr("y", 000)
+                .attr("height", 1000)
+                .attr("width", 1000)
+                .attr("fill", "white")
+                .style("stroke-width", 1);
+
+            svg.append("text")
+                .attr("x", 200)
+                .attr("y", 100)
+                .attr("alignment-baseline", "central")
+                .style("font-size", "10px")
+                .attr("font-family", "arial")
+                .text(lang3.a);
+        }
 
         // create 2 data_set
-        var data1 = data3;
-        //{ a: 9, b: 20, c: 30, d: 8, e: 12 }
+        var data1; //= { a: 9, b: 20, c: 30, d: 8, e: 12 }
         var data2 = { a: 6, b: 16, c: 20, d: 14, e: 19, f: 12 }
 
         // set the color scale
         var color = d3.scaleOrdinal()
-            .domain(["a", "b", "c", "d", "e", "f"])
+            .domain(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"])
             .range(d3.schemeDark2);
 
         // A function that create / update the plot for a given variable:
         function update(data) {
 
+            let repositories = findRepositories();
+            data = setData(repositories);
+            drawName();
             // Compute the position of each group on the pie:
             var pie = d3.pie()
                 .value(function (d) { return d.value; })
@@ -3529,10 +3627,12 @@
                 .exit()
                 .remove()
 
+            drawKey();
         }
 
         // Initialize the plot with the first dataset
         update(data1)
+
 
 
     </script>
