@@ -91,7 +91,7 @@ public class Collector {
 		List<Document> userDocuments = new ArrayList<Document>();
 		// Connect to the Mongo database
 		MongoClientURI uri = new MongoClientURI(
-			    "mongodb+srv://jackgilbride999:73hog24Ghhdq6BWg@github-ueksk.mongodb.net/test?retryWrites=true&w=majority");
+			    "mongodb+srv://jackgilbride99973hog24Ghhdq6BWg@github-ueksk.mongodb.net/test?retryWrites=true&w=majority");
 			
 		MongoClient mongoClient = new MongoClient(uri);
 		MongoDatabase database = mongoClient.getDatabase("Github");
