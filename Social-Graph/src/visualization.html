@@ -3415,14 +3415,14 @@
             return '#' + ('000000' + h.toString(16)).slice(-6);
         }
 
-        // ctooltip on hover
+        // tooltip on hover
         var tooltip = d3.select("body")
             .append("div")
             .style("position", "absolute")
             .style("z-index", "10")
             .style("visibility", "hidden")
             .style("font-family", "arial")
-	        .style("font-size", "10px")
+            .style("font-size", "10px")
             .text("a simple tooltip");
 
         var len = 0;
@@ -3430,11 +3430,7 @@
             console.log(data[i].repositories.length);
             console.log(len);
             // Add dots
-            svg.append('g')
-                .selectAll("dot")
-                .data(data)
-                .enter()
-                .append("circle")
+            svg.append("circle")
                 .attr("cx", xValue(data[i]))
                 .attr("cy", yValue(data[i]))
                 .attr("r", 3)
@@ -3494,7 +3490,51 @@
             .attr("font-family", "arial")
             .text("Followers vs Followings Graph");
 
-        var legend = [height -10, height - 20, height - 30, height -40]
+        var keyX = 270;
+        var keyY = 315;
+        var keyHeight = 40;
+        var keyWidth = 100;
+
+        svg.append("rect")
+            .attr("x", keyX)
+            .attr("y", keyY)
+            .attr("height", keyHeight)
+            .attr("width", keyWidth)
+            .attr("fill", "white")
+            .style("stroke", "black")
+            .style("stroke-width", 1);
+
+        svg.append("text")
+            .attr("x", keyX + keyWidth / 2)
+            .attr("y", keyY - 6)
+            .attr("text-anchor", "middle")
+            .style("font-size", "10px")
+            .attr("font-family", "arial")
+            .attr("font-weight", 700)
+            .text("Number of Repositories:");
+
+
+
+        var keyText = ["25", "12", "0"];
+        var keyColour = ["#00FF00", "#FFFF00", "#FF0000"];
+        var keyYs = [keyY + 9, keyY + 20, keyY + 31];
+        for (let i = 0; i < keyText.length; i++) {
+            svg.append("text")
+                .attr("x", keyX + 20)
+                .attr("y", keyYs[i])
+                .attr("alignment-baseline", "central")
+                .style("font-size", "10px")
+                .attr("font-family", "arial")
+                .text(keyText[i]);
+
+            svg.append("circle")
+                .attr("cx", keyX + 10)
+                .attr("cy", keyYs[i])
+                .attr("r", 3)
+                .style("fill", keyColour[i])
+        }
+
+
     </script>
 </body>
 
