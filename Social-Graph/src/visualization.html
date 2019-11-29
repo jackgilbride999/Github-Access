@@ -8,10 +8,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
     <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
     <title>D3</title>
+    <!-- Create a div where the graph will take place -->
+    <div id="my_dataviz"></div>
 </head>
 
 <body>
     <script>
+
+        // set the dimensions and margins of the graph
+        var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+            width = 460 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3.select("#my_dataviz")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
 
         var data = [
             {
@@ -1830,7 +1846,8 @@
                 "_id": "5de029e8d7dce50678bd1b3c",
                 "login": "Nicholas-Lawlor",
                 "followers": 38,
-                "following": 24
+                "following": 24,
+                "repositories": []
             },
             {
                 "_id": "5de029e8d7dce50678bd1b24",
@@ -3381,34 +3398,56 @@
             }
         ]
 
-        var svg = d3.select("body").append("svg")
-            .attrs({
-                "width": 5000,
-                "height": 5000,
-                "bgcolor": "black"
-            })
-
-
-        for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < data[i].repositories.length; j++) {
-                console.log(data[i]._id);
-                var ball = svg.append("circle")
-                    .attrs({  // provided by selection-multi module
-                        "r": 10,
-                        "cx": 50 + (data[i].repositories[j].watchers) * 50,
-                        "cy": 50 + (data[i].repositories[j].forks) * 50
-                    })
-                    .style("fill", "#ffe41e");
-                var label = svg.append("text")
-                    .attrs({
-                        "x": 50 + (data[i].repositories[j].watchers) * 50,
-                        "y": 50 + data[i].repositories[j].forks * 50,
-                    }).text(data[i].login)
-
+        console.log(data);
+        var xValue = function (d) { return d.followers * 5 };
+        var yValue = function (d) { return height - margin.bottom - d.following * 5 };
+        function perc2color(perc) {
+            var r, g, b = 0;
+            if (perc < 50) {
+                r = 255;
+                g = Math.round(5.1 * perc);
             }
+            else {
+                g = 255;
+                r = Math.round(510 - 5.10 * perc);
+            }
+            var h = r * 0x10000 + g * 0x100 + b * 0x1;
+            return '#' + ('000000' + h.toString(16)).slice(-6);
         }
 
+        var len = 0;
+        for (let i = 0; i < data.length; i++) {
+            console.log(data[i].repositories.length);
+            console.log(len);
+            // Add dots
+            svg.append('g')
+                .selectAll("dot")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", xValue(data[i]))
+                .attr("cy", yValue(data[i]))
+                .attr("r", 3)
+                .style("fill", perc2color(data[i].repositories.length * 4))
+        }
+
+
+        // Add X axis
+        var x = d3.scaleLinear()
+            .domain([0, 40])
+            .range([0, 40*5]);
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+            .domain([0, 40])
+            .range([height, 0]);
+        svg.append("g")
+            .call(d3.axisLeft(y));
     </script>
 </body>
+
 
 </html>
